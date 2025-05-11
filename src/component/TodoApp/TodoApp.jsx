@@ -1,26 +1,67 @@
-import React,{Component} from "react";
-import './TodoApp.css'
+import React, { Component } from "react";
+import "./TodoApp.css";
 
 class TodoApp extends Component {
-    render(){
-        return (
-            <>
-                <div className="todo-container">
-                    <h1>Todo App</h1>
+  state = {
+    input: "",
+    items: [],
+  };
 
-                    <form className="input-section">
-                        <input type="text" placeholder="Enter Items..."/>
-                    </form>
+  handleChange = (event) => {
+    this.setState({
+      input: event.target.value,
+    });
+  };
 
-                    <ul>
-                        <li>hello <i className="fa-solid fa-trash"></i></li>
-                        <li>hello <i className="fa-solid fa-trash"></i></li>
-                        <li>hello <i className="fa-solid fa-trash"></i></li>
-                    </ul>
-                </div>
-            </>
-        )
-    }
+  storeItems = (event) => {
+    event.preventDefault();
+    const { input, items } = this.state;
+
+    this.setState({
+      items: [...items, input],
+      input: "",
+    });
+  };
+
+  deleteItem = (key) => {
+    this.setState({
+      items: this.state.items.filter((data, index) => index !== key),
+    });
+  };
+
+  render() {
+    const { input, items } = this.state;
+
+    return (
+      <>
+        <div className="todo-container">
+
+          <h1>Todo App</h1>
+
+          <form className="input-section" onSubmit={this.storeItems}>
+            <input
+              type="text"
+              placeholder="Enter Items..."
+              value={input}
+              onChange={this.handleChange}
+            />
+          </form>
+
+          <ul>
+            {items.map((item, index) => (
+              <li key={index}>
+                {item}{" "}
+                <i
+                  onClick={() => this.deleteItem(index)}
+                  className="fa-solid fa-trash"
+                ></i>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </>
+    );
+  }
 }
 
-export default TodoApp
+export default TodoApp;
