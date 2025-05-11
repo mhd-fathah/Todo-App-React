@@ -18,7 +18,7 @@ class TodoApp extends Component {
     const { input, items } = this.state;
 
     this.setState({
-      items: [...items, input],
+      items: [...items, { text: input, completed: false }],
       input: "",
     });
   };
@@ -29,13 +29,18 @@ class TodoApp extends Component {
     });
   };
 
+  toggleComplete = (key) => {
+    const updatedItems = [...this.state.items];
+    updatedItems[key].completed = !updatedItems[key].completed;
+    this.setState({ items: updatedItems });
+  };
+
   render() {
     const { input, items } = this.state;
 
     return (
       <>
         <div className="todo-container">
-
           <h1>Todo App</h1>
 
           <form className="input-section" onSubmit={this.storeItems}>
@@ -50,7 +55,18 @@ class TodoApp extends Component {
           <ul>
             {items.map((item, index) => (
               <li key={index}>
-                {item}{" "}
+                <input
+                  type="checkbox"
+                  checked={item.completed}
+                  onChange={() => this.toggleComplete(index)}
+                />
+                <span
+                  style={{
+                    textDecoration: item.completed ? "line-through" : "none",
+                  }}
+                >
+                  {item.text}
+                </span>
                 <i
                   onClick={() => this.deleteItem(index)}
                   className="fa-solid fa-trash"
